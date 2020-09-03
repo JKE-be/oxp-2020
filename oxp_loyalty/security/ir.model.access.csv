@@ -1,2 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_oxp_loyalty_oxp_loyalty,oxp_loyalty.oxp_loyalty,model_oxp_loyalty_oxp_loyalty,base.group_user,1,1,1,1
+access_loyalty_history_all,access_loyalty_history_all,model_loyalty_history,,0,0,0,0
+access_loyalty_history_employee,access_loyalty_history_employee,model_loyalty_history,base.group_user,1,0,0,0
+access_loyalty_history_edit,access_loyalty_history edit,model_loyalty_history,base.group_system,1,1,1,1
+access_loyalty_pack,access_loyalty_pack,model_loyalty_pack,,0,0,0,0
+access_loyalty_pack_admin,access_loyalty_pack_admin,model_loyalty_pack,base.group_system,1,1,1,1
