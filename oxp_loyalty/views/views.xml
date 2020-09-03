@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="oxp_loyalty.list">
+      <field name="name">oxp_loyalty list</field>
+      <field name="model">oxp_loyalty.oxp_loyalty</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="oxp_loyalty.action_window">
+      <field name="name">oxp_loyalty window</field>
+      <field name="res_model">oxp_loyalty.oxp_loyalty</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="oxp_loyalty.action_server">
+      <field name="name">oxp_loyalty server</field>
+      <field name="model_id" ref="model_oxp_loyalty_oxp_loyalty"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="oxp_loyalty" id="oxp_loyalty.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="oxp_loyalty.menu_1" parent="oxp_loyalty.menu_root"/>
+    <menuitem name="Menu 2" id="oxp_loyalty.menu_2" parent="oxp_loyalty.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="oxp_loyalty.menu_1_list" parent="oxp_loyalty.menu_1"
+              action="oxp_loyalty.action_window"/>
+    <menuitem name="Server to list" id="oxp_loyalty" parent="oxp_loyalty.menu_2"
+              action="oxp_loyalty.action_server"/>
+-->
+  </data>
+</odoo>
