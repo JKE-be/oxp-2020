@@ -15,7 +15,7 @@ class LoyaltyPack(models.Model):
         partner = self.env.user.partner_id
         assert partner.loyalty_amount >= self.point
 
-        coupon = self.env['sale.coupon'].create({
+        coupon = self.env['coupon.coupon'].create({
             'program_id': self.program_id.id,
             'partner_id': partner.id,
         })
@@ -25,14 +25,13 @@ class LoyaltyPack(models.Model):
             "amount": -1 * self.point,
             "order_id": False,
             "name": _('Pack %s: %s' % (self.name, coupon.code)),
-            "status": 'confirm',
             "coupon_id": coupon.id,
         })
         if send_mail:
-            template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
+            template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
             self.env['mail.thread'].message_post_with_template(
                 template.id, composition_mode='comment',
-                model='sale.coupon', res_id=coupon.id,
+                model='coupon.coupon', res_id=coupon.id,
                 email_layout_xmlid='mail.mail_notification_light',
             )
         return coupon

@@ -1,4 +1,54 @@
 <odoo>
     <data>
+        <record id="loyalty_coupon_program_10" model="coupon.program">
+            <field name="name">Loyalty 10</field>
+            <field name="promo_code_usage">code_needed</field>
+            <field name="discount_apply_on">on_order</field>
+            <field name="reward_type">discount</field>
+            <field name="discount_type">fixed_amount</field>
+            <field name="discount_fixed_amount">10.0</field>
+            <field name="program_type">coupon_program</field>
+            <field name="validity_duration">30</field>
+        </record>
+
+        <record id="loyalty_coupon_program_25" model="coupon.program">
+            <field name="name">Loyalty 25</field>
+            <field name="promo_code_usage">code_needed</field>
+            <field name="discount_apply_on">on_order</field>
+            <field name="reward_type">discount</field>
+            <field name="discount_type">fixed_amount</field>
+            <field name="discount_fixed_amount">25</field>
+            <field name="program_type">coupon_program</field>
+            <field name="validity_duration">30</field>
+        </record>
+
+        <record id="loyalty_coupon_program_50" model="coupon.program">
+            <field name="name">Loyalty 50</field>
+            <field name="promo_code_usage">code_needed</field>
+            <field name="discount_apply_on">on_order</field>
+            <field name="reward_type">discount</field>
+            <field name="discount_type">fixed_amount</field>
+            <field name="discount_fixed_amount">50</field>
+            <field name="program_type">coupon_program</field>
+            <field name="validity_duration">30</field>
+        </record>
+
+        <record id="loyalty_pack_20000" model="loyalty.pack">
+            <field name="name">Loyalty 10€</field>
+            <field name="oxp">20000</field>
+            <field name="program_id" ref="oxp_loyalty.loyalty_coupon_program_10" />
+        </record>
+
+        <record id="loyalty_pack_40000" model="loyalty.pack">
+            <field name="name">Loyalty 25€</field>
+            <field name="oxp">40000</field>
+            <field name="program_id" ref="oxp_loyalty.loyalty_coupon_program_25" />
+        </record>
+
+        <record id="loyalty_pack_75000" model="loyalty.pack">
+            <field name="name">Loyalty 50€</field>
+            <field name="oxp">75000</field>
+            <field name="program_id" ref="oxp_loyalty.loyalty_coupon_program_50" />
+        </record>
     </data>
 </odoo>
