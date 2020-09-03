@@ -1,24 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-<!--
-        <template id="listing">
-          <ul>
-            <li t-foreach="objects" t-as="object">
-              <a t-attf-href="#{ root }/objects/#{ object.id }">
-                <t t-esc="object.display_name"/>
-              </a>
-            </li>
-          </ul>
-        </template>
-        <template id="object">
-          <h1><t t-esc="object.display_name"/></h1>
-          <dl>
-            <t t-foreach="object._fields" t-as="field">
-              <dt><t t-esc="field"/></dt>
-              <dd><t t-esc="object[field]"/></dd>
+
+  <!-- PORTAL -->
+  <template id="portal_my_home_breadcrumbs_loyalty" name="Portal layout : loyalty menu" inherit_id="portal.portal_breadcrumbs" priority="27">
+      <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+          <li>
+              &amp;nbsp;<a href="/my/loyalties"> Loyalties</a>
+          </li>
+      </xpath>
+  </template>
+
+  <template id="portal_my_home_loyalty" name="Show Loyalties" customize_show="True" inherit_id="portal.portal_my_home" priority="15">
+    <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        <t t-call="portal.portal_docs_entry">
+            <t t-set="title">Loyalties</t>
+            <t t-set="url" t-value="'/my/loyalties'"/>
+            <t t-set="placeholder_count" t-value="'loyalty_count'"/>
+        </t>
+    </xpath>
+  </template>
+
+  <template id="portal_my_loyalties" name="My Loyalties">
+    <t t-call="portal.portal_layout">
+        <h3 class="page-header mt-3">Your Loyalties</h3>
+        <div>
+            <div class="bg-white loyal-summary p-3">
+                You have <b><t t-esc="user_id.partner_id.loyalty_amount"/> Oxp</b> available.<br/>
+                You can convert it into a Coupon, to have a reduction on a next order.
+            </div>
+
+            <div class='packs'>
+                <div class="row">
+                    <t t-set='colors' t-value="'primary secondary default'.split(' ')"/>
+                    <t t-foreach="pack_ids" t-as="pack">
+                        <t t-set='enable' t-value='pack.oxp >= user_id.partner_id.loyalty_amount'/>
+                        <div class="col pt32 pb32 text-center">
+                            <div class="card bg-white" style='border: 1px solid #ddd !important;'>
+                                <div class="card-body">
+                                    <h3 class=""><t t-esc="pack.name"/></h3>
+                                    <div class='text-center'><i t-attf-class="fa fa-3x fa-thumbs-up rounded-circle m-3 text-#{colors[pack_index]}"></i></div>
+                                    <p class="">
+                                        <small class='text-muted'>Convert</small>
+                                        <br/> <t t-esc="pack.oxp"/> Oxp
+                                        <br/><small class='text-muted'>into a coupon of </small>
+                                        <br/><t t-esc="pack.program_id.discount_fixed_amount" /> €
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <form method='POST' t-attf-action='/loyalties/convert/#{pack.id}'>
+                                        <input t-attf-class='btn btn-block #{not enable and "btn-disabled"} bg-#{colors[pack_index]}' type='submit' value='Convert My Oxp' t-att-disabled='enable and "disabled" or None'/>
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="page-header">Historic</h3>
+        <table class="mt32 table table-hover o_my_status_table">
+            <thead>
+              <tr class="active">
+                <th>Date</th>
+                <th>Name</th>
+                <th class='text-right'>Oxp (+ | -)</th>
+                <th>Base Amount</th>
+              </tr>
+            </thead>
+            <t t-foreach="user_id.partner_id.sudo().loyalty_ids" t-as="loyalty">
+                <tr t-att-class="loyalty.coupon_id and 'text-info' or '' ">
+                    <td><t t-esc="loyalty.create_date" t-options='{"widget": "date"}' /></td>
+                    <td><t t-esc="loyalty.name"/></td>
+                    <td><t t-esc="loyalty.amount"/> Oxp</td>
+                    <td><span t-if='loyalty.order_id' t-esc="loyalty.order_id._get_amount_loyalty()" t-options='{"widget": "monetary", "display_currency": loyalty.order_id.currency_id}'/></td>
+                </tr>
             </t>
-          </dl>
-        </template>
--->
-    </data>
+        </table>
+      </t>
+    </template>
+
+    <template id="loyalties_coupon" name="Your Coupon">
+      <t t-call="portal.portal_layout">
+        <div class='row'>
+          <div t-if="error" class="mt-3 col-6 mx-auto alert alert-danger">
+            <t t-esc="error"/>
+          </div>
+          <div t-else="" class='col-12'>
+            <section class="s_cover parallax s_parallax_is_fixed bg-black-50 pt96 pb96 s_parallax_no_overflow_hidden" data-scroll-background-ratio="1" data-name="Cover" style="background-image: none;">
+              <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+              <div class="container bg-white-75">
+                <div class="row s_nb_column_fixed">
+                  <div class="col-lg-12 s_text pt16 pb16 text-center copyClipZone" data-name="Text">
+                    <h1 class="s_title_thin " style="font-size: 62px; text-align: center;">Congratulations !</h1>
+                    <div class='h3'>
+                      You just converted <t t-esc='pack.oxp'/> Oxp into a coupon of <span t-field="pack.program_id.discount_fixed_amount"/>  !
+                    </div>
+                    <p class="lead " style="text-align: center;"></p>
+                      <div class='small'>
+                        Validity: <t t-esc='pack.program_id.validity_duration'/> days
+                      </div>
+                    <p>
+                    </p>
+                  </div>
+                  <div class="col-lg-12 s_btn text-center pt16 pb16" data-name="Buttons">
+                    <a class='btn btn-primary' href='/my/loyalties'>Back to my portal</a>
+                    <a class='btn btn-secondary' href='/shop/cart'>Continue my shopping</a>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </t>
+    </template>
+
+    <template id="loyalty_product" inherit_id="website_sale.product" name="product" priority="16">
+      <xpath expr="//div[@id='product_details']" position="inside">
+        <t t-if="product.allow_loyalty">
+          <hr />
+          <div class="product_loyalty alert alert-secondary">
+              <t t-esc='product._compute_label()' />
+          </div>
+        </t>
+      </xpath>
+    </template>
+
+    <template id="total" inherit_id="website_sale.total">
+        <xpath expr="//div[@id='cart_total']//tr[last()]" position="after">
+          <tr t-if='website_sale_order._get_amount_loyalty()'>
+              <td class="text-right"><strong>Oxp won after your payment:</strong></td>
+              <td class="text-xl-right o_oxp_amount">
+                <t t-esc='website_sale_order._get_amount_loyalty()' /> Oxp
+              </td>
+          </tr>
+        </xpath>
+    </template>
 </odoo>
