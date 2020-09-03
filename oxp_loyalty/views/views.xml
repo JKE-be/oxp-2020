@@ -63,8 +63,14 @@
       <field name="view_mode">tree,form</field>
     </record>
 
+    <record model="ir.actions.act_window" id="action_loyalty_pack">
+      <field name="name">Loyalty pack</field>
+      <field name="res_model">loyalty.pack</field>
+      <field name="view_mode">tree,form</field>
+    </record>
 
     <menuitem id="menu_loyalty" name="Loyalties" parent="website.menu_website_configuration" sequence="11"  />
     <menuitem name="Loyalty History" id="menu_loyalty_history" parent="menu_loyalty" action="action_loyalty_history" />
+    <menuitem name="Loyalty Packs" id="menu_loyalty_award" parent="menu_loyalty" action="action_loyalty_pack" />
   </data>
 </odoo>
