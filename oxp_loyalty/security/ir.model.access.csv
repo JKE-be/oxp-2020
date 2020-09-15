@@ -4,3 +4,5 @@ access_loyalty_history_employee,access_loyalty_history_employee,model_loyalty_hi
 access_loyalty_history_edit,access_loyalty_history edit,model_loyalty_history,base.group_system,1,1,1,1
 access_loyalty_pack,access_loyalty_pack,model_loyalty_pack,,0,0,0,0
 access_loyalty_pack_admin,access_loyalty_pack_admin,model_loyalty_pack,base.group_system,1,1,1,1
+access_loyalty_config,access_loyalty_config,model_loyalty_config,,1,0,0,0
+access_loyalty_config_edit,access_loyalty_config_edit,model_loyalty_config,base.group_system,1,1,1,1

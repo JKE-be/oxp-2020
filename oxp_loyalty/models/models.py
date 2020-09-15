@@ -10,10 +10,11 @@ class LoyaltyPack(models.Model):
     name = fields.Char(required=1)
     oxp = fields.Integer(default=100, required=1)
     program_id = fields.Many2one('coupon.program', required=1)
+    config_id = fields.Many2one('loyalty.config')
 
     def _convert(self, send_mail=True):
         partner = self.env.user.partner_id
-        assert partner.loyalty_amount >= self.point
+        assert partner.loyalty_amount >= self.oxp
 
         coupon = self.env['coupon.coupon'].create({
             'program_id': self.program_id.id,
@@ -22,7 +23,7 @@ class LoyaltyPack(models.Model):
 
         self.env['loyalty.history'].create({
             "partner_id": partner.id,
-            "amount": -1 * self.point,
+            "amount": -1 * self.oxp,
             "order_id": False,
             "name": _('Pack %s: %s' % (self.name, coupon.code)),
             "coupon_id": coupon.id,
@@ -54,9 +55,9 @@ class ProductTemplate(models.Model):
 
     allow_loyalty = fields.Boolean(default=True, help="Offer Oxp when customer buy it")
 
-    def _compute_label(self):
+    def _compute_label(self, website_id):
         self.ensure_one()
-        return self.allow_loyalty and _('Win %s Oxp by buying this product', self.price * 100) or ''
+        return self.allow_loyalty and _('Win %d Oxp by buying this product', self.price * website_id.loyalty_config_id.oxp_by_euro) or ''
 
 
 class ResPartner(models.Model):
@@ -101,4 +102,29 @@ class SaleOrder(models.Model):
         return res
 
     def _get_amount_loyalty(self):
-        return sum(self.order_line.filtered(lambda r: r.product_id.product_tmpl_id.allow_loyalty).mapped('price_total') * 100)
+        return int(sum(
+            self.order_line.filtered(
+                lambda r: r.product_id.product_tmpl_id.allow_loyalty
+            ).mapped('price_total') * self.website_id.loyalty_config_id.oxp_by_euro
+        )) if self.website_id.loyalty_config_id else 0
+
+
+class LoyaltyConfig(models.Model):
+    _name = 'loyalty.config'
+    _description = "Loyalty config"
+
+    name = fields.Char()
+    oxp_by_euro = fields.Integer()
+    pack_ids = fields.One2many('loyalty.pack', 'config_id')
+
+
+class Website(models.Model):
+    _inherit = 'website'
+
+    loyalty_config_id = fields.Many2one('loyalty.config')
+
+
+class WebsiteConfigSettings(models.TransientModel):
+    _inherit = "res.config.settings"
+
+    loyalty_config_id = fields.Many2one('loyalty.config', related='website_id.loyalty_config_id', readonly=False)

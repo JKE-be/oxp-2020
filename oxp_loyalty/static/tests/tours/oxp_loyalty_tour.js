@@ -7,7 +7,7 @@ tour.register('oxp_loyalty_tour', {
     url: '/shop/customizable-desk-config-9',
     test: true,
 },  [{
-    trigger: 'div.product_loyalty:contains("Win 75000.0 Oxp by buying this product")',
+    trigger: 'div.product_loyalty:contains("Win 75000 Oxp by buying this product")',
     content: "Check loyalty message is displayed",
 },{
     trigger: '#add_to_cart',

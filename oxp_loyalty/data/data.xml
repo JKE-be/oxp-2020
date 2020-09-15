@@ -50,5 +50,15 @@
             <field name="oxp">75000</field>
             <field name="program_id" ref="oxp_loyalty.loyalty_coupon_program_50" />
         </record>
+
+        <record id="loyalty_config" model="loyalty.config">
+            <field name="name">Loyalty default config</field>
+            <field name="oxp_by_euro">100</field>
+            <field name="pack_ids" eval="[ref('loyalty_pack_20000'),ref('loyalty_pack_40000'),ref('loyalty_pack_75000')]" />
+        </record>
+
+        <record id="website.default_website" model="website">
+            <field name="loyalty_config_id" ref="oxp_loyalty.loyalty_config"/>
+        </record>
     </data>
 </odoo>
