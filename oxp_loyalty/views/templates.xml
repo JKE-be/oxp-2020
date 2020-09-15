@@ -137,4 +137,11 @@
           </tr>
         </xpath>
     </template>
+
+    <template id="how_to" name="How it works">
+        <t t-call="website.layout">
+          <div class="oe_structure" id="oe_structure_oxp_howtocontroller_1">Here how it works</div>
+        </t>
+    </template>
+
 </odoo>

@@ -21,6 +21,10 @@ class WebsiteAccount(CustomerPortal):
 
 class Loyalties(http.Controller):
 
+    @http.route('/loyalties/how-to', auth='public', website=True, sitemap=True)
+    def loyalty_how_it_works(self):
+        return request.render("oxp_loyalty.how_to")
+
     @http.route('/loyalties/convert/<int:pack>', auth='user', website=True)
     def loyalty_convert_pack(self, pack):
         pack = request.env['loyalty.pack'].sudo().browse(pack)
