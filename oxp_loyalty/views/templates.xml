@@ -20,6 +20,12 @@
     </xpath>
   </template>
 
+  <template id="oxp_assets_tests" name="tour" inherit_id="web.assets_tests">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/oxp_loyalty/static/tests/tours/oxp_loyalty_tour.js"></script>
+    </xpath>
+  </template>
+
   <template id="portal_my_loyalties" name="My Loyalties">
     <t t-call="portal.portal_layout">
         <h3 class="page-header mt-3">Your Loyalties</h3>
