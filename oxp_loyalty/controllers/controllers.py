@@ -9,7 +9,7 @@ class WebsiteAccount(CustomerPortal):
     @http.route('/my/loyalties', auth='user', website=True)
     def portal_my_loyalties(self):
         params = {
-            'pack_ids': request.env['loyalty.pack'].sudo().search([])
+            'pack_ids': request.website.loyalty_config_id.pack_ids.sudo()
         }
         return request.render('oxp_loyalty.portal_my_loyalties', params)
 
@@ -28,6 +28,7 @@ class Loyalties(http.Controller):
     @http.route('/loyalties/convert/<int:pack>', auth='user', website=True)
     def loyalty_convert_pack(self, pack):
         pack = request.env['loyalty.pack'].sudo().browse(pack)
+        assert pack.config_id == request.website.loyalty_config_id
 
         error = False
         my_loyalties = request.env.user.partner_id.loyalty_amount

@@ -12,7 +12,7 @@
 
   <template id="portal_my_home_loyalty" name="Show Loyalties" customize_show="True" inherit_id="portal.portal_my_home" priority="15">
     <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-        <t t-call="portal.portal_docs_entry">
+        <t t-call="portal.portal_docs_entry" t-if="request.website.loyalty_config_id">
             <t t-set="title">Loyalties</t>
             <t t-set="url" t-value="'/my/loyalties'"/>
             <t t-set="placeholder_count" t-value="'loyalty_count'"/>
@@ -80,7 +80,7 @@
                     <td><t t-esc="loyalty.create_date" t-options='{"widget": "date"}' /></td>
                     <td><t t-esc="loyalty.name"/></td>
                     <td><t t-esc="loyalty.amount"/> Oxp</td>
-                    <td><span t-if='loyalty.order_id' t-esc="loyalty.order_id._get_amount_loyalty()" t-options='{"widget": "monetary", "display_currency": loyalty.order_id.currency_id}'/></td>
+                    <td><span t-if='loyalty.order_id' t-esc="loyalty.order_id._get_amount_loyalty() / website.loyalty_config_id.oxp_by_euro" t-options='{"widget": "monetary", "display_currency": loyalty.order_id.currency_id}'/></td>
                 </tr>
             </t>
         </table>
@@ -124,10 +124,10 @@
 
     <template id="loyalty_product" inherit_id="website_sale.product" name="product" priority="16">
       <xpath expr="//div[@id='product_details']" position="inside">
-        <t t-if="product.allow_loyalty">
+        <t t-if="product.allow_loyalty and request.website.loyalty_config_id">
           <hr />
           <div class="product_loyalty alert alert-secondary">
-              <t t-esc='product._compute_label()' />
+              <t t-esc='product._compute_label(request.website)' />
           </div>
         </t>
       </xpath>
